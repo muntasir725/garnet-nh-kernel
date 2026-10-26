@@ -1,0 +1,23 @@
+name: Inspect garnet
+on: workflow_dispatch
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    env:
+      GIT_TERMINAL_PROMPT: "0"
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: crDroid garnet repos
+        run: |
+          curl -s -H "Authorization: Bearer $GH_TOKEN" "https://api.github.com/search/repositories?q=garnet+org:crdroidandroid&per_page=50" | grep '"full_name"' || true
+      - name: Xiaomi official garnet branches
+        run: |
+          git ls-remote --heads https://github.com/MiCode/Xiaomi_Kernel_OpenSource | grep -i garnet || echo "none found"
+      - name: Kernel layout 14.0
+        run: |
+          git clone --depth=1 -b 14.0 https://github.com/crdroidandroid/android_xiaomi_kernel_garnet k || exit 0
+          cd k
+          ls
+          ls arch/arm64/configs
+          head -5 Makefile
+          find . -maxdepth 2 \( -name "build.config*" -o -name "BUILD*" \)
