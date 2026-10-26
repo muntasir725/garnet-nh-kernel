@@ -1,0 +1,21 @@
+name: Inspect garnet
+on: workflow_dispatch
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Branches
+        run: |
+          for r in android_xiaomi_kernel_garnet android_kernel_xiaomi_garnet-modules android_kernel_xiaomi_garnet-devicetrees; do
+            echo "== $r"
+            git ls-remote --heads https://github.com/crdroidandroid/$r
+          done
+      - name: Kernel layout
+        run: |
+          git clone --depth=1 https://github.com/crdroidandroid/android_xiaomi_kernel_garnet k
+          cd k
+          ls
+          ls arch/arm64/configs
+          find . -maxdepth 2 \( -name "build.config*" -o -name "BUILD*" \)
+          head -5 Makefile
+          grep -rn "ath9k\|CONFIG_USB_CONFIGFS_F_HID" arch/arm64/configs | head
