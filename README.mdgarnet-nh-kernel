@@ -1,4 +1,4 @@
-name: Inspect garnet
+name: Inspect garnet v2
 on: workflow_dispatch
 jobs:
   inspect:
